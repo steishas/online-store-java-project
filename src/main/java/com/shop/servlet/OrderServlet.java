@@ -6,6 +6,7 @@ import com.shop.model.CartItem;
 import com.shop.model.Order;
 import com.shop.model.User;
 import com.shop.util.Validator;
+import com.shop.model.CartItemView;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.ArrayList;
 
 @WebServlet("/orders")
 public class OrderServlet extends HttpServlet {
@@ -104,11 +106,25 @@ public class OrderServlet extends HttpServlet {
             req.setAttribute("paymentMethod", req.getParameter("paymentMethod"));
             req.setAttribute("cardNumber", req.getParameter("cardNumber"));
 
+            // Загружаем корзину и преобразуем в CartItemView
             List<CartItem> cartItems = cartDAO.getCartByUserId(user.getId());
+            List<CartItemView> cartItemViews = new ArrayList<>();
+            for (CartItem item : cartItems) {
+                CartItemView view = new CartItemView();
+                view.setCartItemId(item.getId());  // используем id из БД
+                view.setProductId(item.getProductId());
+                view.setProductName(item.getProductName());
+                view.setPrice(item.getPrice());
+                view.setQuantity(item.getQuantity());
+                view.setStockQuantity(item.getStockQuantity());
+                view.setSubtotal(item.getSubtotal());
+                cartItemViews.add(view);
+            }
+
             BigDecimal total = cartDAO.getCartTotal(user.getId());
             int itemCount = cartDAO.getCartItemCount(user.getId());
 
-            req.setAttribute("cartItems", cartItems);
+            req.setAttribute("cartItems", cartItemViews);  // передаём CartItemView
             req.setAttribute("total", total);
             req.setAttribute("itemCount", itemCount);
 
