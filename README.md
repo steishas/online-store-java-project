@@ -58,12 +58,61 @@ db.user=postgres
 db.password=ВАШ_ПАРОЛЬ
 ```
 
+#### Настройка проекта в IntelliJ IDEA
+Откройте проект
+Запустите IntelliJ IDEA
+Нажмите Open (или File → Open)
+Выберите папку с проектом
+Дождитесь загрузки Maven зависимостей (появится внизу)
+
+Настройте подключение к базе данных
+Откройте файл: src/main/resources/database.properties
+
+Измените пароль на свой:
+```bash
+properties
+db.url=jdbc:postgresql://localhost:5432/online_store
+db.user=postgres
+db.password=ВАШ_ПАРОЛЬ      # замените на пароль PostgreSQL
+```
+
+Настройте Tomcat в IDEA
+Нажмите Run → Edit Configurations (или ⌘ + , на Mac)
+
+Нажмите + → Tomcat Server → Local
+
+В разделе Server:
+- Name: Tomcat 9
+- Application server: нажмите Configure... → выберите папку с Tomcat
+- HTTP port: 8080
+
+Перейдите на вкладку Deployment:
+Нажмите + → Artifact
+Выберите online-store:war exploded
+Application context: /online-store
+
+Нажмите `OK`
+
 ### 4. Сборка и запуск
+**Способ 1:** Запуск через Tomcat в IDEA (рекомендуется)
+- Выберите конфигурацию Tomcat 9 в правом верхнем углу
+- Нажмите Shift + F10
+- Дождитесь запуска Tomcat
+
+**Способ 2:** Запуск через Maven (без установки Tomcat)
+В терминале IntelliJ IDEA (Alt + F12) выполните:
 
 ```bash
 mvn clean package
 mvn tomcat7:run
 ```
+**Способ 3:** Через Maven панель
+- Откройте Maven панель справа (иконка m)
+- Разверните online-store → Lifecycle
+- Дважды кликните clean
+- Дважды кликните package
+- Разверните Plugins → tomcat7
+- Дважды кликните tomcat7:run
 
 Приложение будет доступно по адресу: `http://localhost:8080/online-store/`
 
@@ -78,9 +127,9 @@ cd /путь_к_tomcat/bin
 
 
 ## Тестовые данные
-Логин - admin	
+**Логин** - admin	
 
-Пароль - adminexample
+**Пароль** - adminexample
 
 100 товаров в 3 категориях.
 Корзина и заказы пусты.
